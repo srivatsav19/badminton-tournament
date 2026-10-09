@@ -14,7 +14,16 @@
 <section class="card"><h2>Export & leave</h2><div class="actions"><button id="export" class="secondary">Export standings CSV</button><button id="leave" class="secondary">Leave tournament</button></div></section></main><div class="footer">RALLY Tournament Desk · Live updates require internet.</div></div>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";import{getAuth,signInAnonymously,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";import{getDatabase,ref,get,set,onValue}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-const firebaseConfig={apiKey:"AIzaSyAYvW1Ps1Jvp4tif7DFqz3Lvqdtyx0JeyM",authDomain:"badminton-project-a9aa8.firebaseapp.com",databaseURL:"https://badminton-project-a9aa8-default-rtdb.firebaseio.com",projectId:"badminton-project-a9aa8",storageBucket:"badminton-project-a9aa8.firebasestorage.app",messagingSenderId:"72035855273",appId:"1:72035855273:web:db0bd31e700170b4bc72b8"};
+const firebaseConfig = {
+  apiKey: "AIzaSyAvV1Ps1Jvp4tif7DFqZ3LvqdtyxOJeyrM",
+  authDomain: "badminton-project-a9aa8.firebaseapp.com",
+  databaseURL: "https://badminton-project-a9aa8-default-rtdb.firebaseio.com",
+  projectId: "badminton-project-a9aa8",
+  storageBucket: "badminton-project-a9aa8.firebasestorage.app",
+  messagingSenderId: "72035855273",
+  appId: "1:72035855273:web:db0bd31e700170b4bc72b8",
+  measurementId: "G-JLMK0F0D1S"
+};
 const $=id=>document.getElementById(id);let auth,db,user=null,codeNow="",stop=null,d=null;const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 function stat(t,ok=false){$("status").textContent=t;$("dot").classList.toggle("ok",ok)}function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function err(s){$("createError").textContent=s;$("createError").classList.remove("hidden")}
 function init(){try{const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getDatabase(app);stat("Connecting…");signInAnonymously(auth).catch(e=>$("message").textContent="Anonymous sign-in failed: "+e.message);onAuthStateChanged(auth,u=>{user=u;if(u){stat("Database connected",true);$("message").textContent="Connected. Create a tournament or join using its code."}})}catch(e){stat("Firebase setup error");$("message").textContent=e.message}}
