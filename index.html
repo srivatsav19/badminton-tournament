@@ -1,70 +1,547 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#14251d"><title>Rally — Badminton Tournament Manager</title>
-<style>
-:root{--ink:#14251d;--muted:#627067;--line:#dce5df;--paper:#f3f7f3;--accent:#c9f36b;--green:#1b7146}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.app{max-width:820px;margin:auto;padding:12px 10px 36px}.hero{background:var(--ink);color:white;border-radius:20px;padding:21px;margin-bottom:12px}.eyebrow,.tinycap{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}.eyebrow{color:var(--accent)}h1{font-size:29px;margin:6px 0}h2{font-size:19px;margin:0 0 5px}.hero p,.sub,.hint{font-size:13px;color:var(--muted);line-height:1.5}.hero p{color:#d3ded6;margin:0}.status{font-size:12px;margin-top:14px;display:flex;gap:7px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:#e8bb46}.dot.ok{background:#8fe2a8}.card{background:white;border:1px solid var(--line);border-radius:17px;padding:15px;margin:12px 0}.sub{margin:3px 0 13px}.label{font-size:13px;font-weight:800;display:block;margin:12px 0 6px}input,button{font:inherit}input[type=text],input[type=number]{width:100%;min-width:0;min-height:45px;border:1px solid #cbd7ce;border-radius:10px;background:white;padding:9px 11px;font-size:16px;color:var(--ink)}input[type=number]{text-align:center}button{border:0;border-radius:11px;min-height:44px;padding:10px 13px;background:var(--ink);color:white;font-weight:750;cursor:pointer}button:disabled{opacity:.5}.secondary{background:#e8eee8;color:var(--ink)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.actions>*{flex:1;min-width:120px}.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0}.players{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hidden{display:none!important}.notice{padding:11px;border-radius:11px;background:#f1f7e4;border:1px solid #dcebbd;font-size:13px;line-height:1.5;margin:10px 0}.error{padding:10px;border-radius:10px;background:#fff0f0;color:#8d2929;font-size:13px;margin-top:10px}.team{padding:11px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}.team:last-child{border:0}.teamname{font-weight:800}.muted{font-size:12px;color:var(--muted);margin-top:3px}.pill{display:inline-block;border-radius:999px;background:#edf2ed;padding:4px 8px;font-size:11px;font-weight:800}.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}.tabs button{white-space:nowrap;min-height:38px;font-size:12px;padding:7px 11px}.tabs .active{background:var(--accent);color:var(--ink)}.round{margin-top:17px}.round h3{font-size:14px;margin:0 0 8px}.match{border:1px solid var(--line);border-radius:13px;padding:11px;margin:8px 0}.matchhead{display:grid;grid-template-columns:minmax(0,1fr) 25px minmax(0,1fr);gap:6px;align-items:center}.side{text-align:center;font-size:13px;font-weight:800;overflow-wrap:anywhere}.versus{text-align:center;font-size:11px;color:var(--muted)}.scoreline{display:grid;grid-template-columns:minmax(0,1fr) 54px 14px 54px minmax(0,1fr);gap:4px;align-items:center;margin-top:10px}.scoreline input{padding:7px 2px}.right{text-align:right}.matchfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:12px}.matchfoot button{min-height:37px;font-size:12px;padding:7px 10px}.saved{color:var(--green);font-weight:800}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}td,th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center}th{font-size:10px;color:var(--muted);text-transform:uppercase}td:nth-child(2),th:nth-child(2){text-align:left}.finalbox{text-align:center;border:2px solid var(--ink);border-radius:15px;padding:20px}.code{font-size:23px;letter-spacing:.12em;font-weight:900}.champion{font-size:21px;font-weight:900;margin:8px 0}.footer{text-align:center;font-size:11px;color:var(--muted);padding:12px}
-@media(max-width:430px){.players{grid-template-columns:1fr}.hero{padding:17px}.hero h1{font-size:26px}.card{padding:12px}.scoreline{grid-template-columns:minmax(0,1fr) 46px 12px 46px minmax(0,1fr)}}
-</style></head>
-<body><div class="app">
-<header class="hero"><div class="eyebrow">Rally · Tournament desk</div><h1>Badminton, organized.</h1><p>Fixed doubles · Round robin · Top two teams play the final</p><div class="status"><span class="dot" id="dot"></span><span id="status">Firebase setup required</span></div></header>
-<section class="card" id="connectCard"><h2>Connect to a tournament</h2><div class="sub">Create a tournament or join with its code. Everyone needs internet access and this same website URL.</div>
-<label class="label" for="codeInput">Tournament code</label><input id="codeInput" type="text" maxlength="6" placeholder="e.g. A7K9Q2" autocapitalize="characters">
-<div class="actions"><button id="joinBtn" class="secondary">Join tournament</button><button id="showCreate">Create new</button></div><div id="message" class="hint" style="margin-top:9px">Add your Firebase project configuration to this HTML file before deploying.</div>
-<div id="createPanel" class="hidden"><div style="height:1px;background:var(--line);margin:14px 0"></div><label class="label">Tournament name</label><input id="tname" type="text" maxlength="70" value="Weekend Badminton Cup"><label class="label">Number of participants (4–64)</label><div class="row"><input id="count" type="number" min="4" max="64" value="10"><button id="buildFields" class="secondary">Set fields</button></div><div id="oddNote" class="notice hidden">Odd participant count: the last person is a reserve/unpaired player. They won't be included in the doubles round robin. For everyone to play, enter an even number.</div><div id="playerFields" class="players" style="margin-top:10px"></div><div class="actions"><button id="createBtn">Create & share tournament</button></div><div id="createError" class="error hidden"></div></div>
-</section>
-<main id="tournament" class="hidden">
-<section class="card"><div class="row" style="justify-content:space-between"><div style="min-width:0"><div class="tinycap" style="color:var(--muted)">Live tournament</div><h2 id="activeName" style="margin-top:4px;overflow-wrap:anywhere"></h2><div id="summary" class="sub" style="margin:3px 0 0"></div></div><button id="shareBtn" class="secondary">Share code</button></div><div class="notice">Tournament code: <span id="activeCode" class="code"></span><br>Share this code and the website URL. Anyone with the code can edit scores.</div><div class="tabs"><button data-tab="teams" class="active">Teams</button><button data-tab="fixtures">Fixtures & scores</button><button data-tab="standings">Standings</button><button data-tab="final">Final</button></div></section>
-<section class="card panel" id="tab-teams"><h2>Teams</h2><div class="sub">Fixed partners for this tournament.</div><div id="teamsList"></div><div id="reserves"></div><div class="actions"><button id="fixturesBtn">Generate round-robin fixtures</button></div><div class="hint">Generating a new schedule clears all current scores and the final. Only do this if you intend to restart the schedule.</div></section>
-<section class="card panel hidden" id="tab-fixtures"><h2>Fixtures & scores</h2><div class="sub">Enter final rally-point scores. Save results to update the live standings on every connected phone.</div><div id="fixturesList"></div></section>
-<section class="card panel hidden" id="tab-standings"><h2>Live standings</h2><div class="sub">Ranking: match points (2 per win), wins, score difference, points scored, then team number.</div><div id="standings"></div></section>
-<section class="card panel hidden" id="tab-final"><h2>Final</h2><div class="sub">The final unlocks after all round-robin matches have saved results.</div><div id="finalArea"></div></section>
-<section class="card"><h2>Export or leave</h2><div class="actions"><button id="exportBtn" class="secondary">Export standings CSV</button><button id="leaveBtn" class="secondary">Leave tournament</button></div><div class="hint" style="margin-top:8px">You can edit a saved score and save again; standings recalculate automatically.</div></section></main>
-<div class="footer">Rally Tournament Desk · Shared updates need an internet connection.</div></div>
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import{getAuth,signInAnonymously,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import{getDatabase,ref,get,set,onValue}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-/* Project ID and Realtime Database URL are prefilled from your screenshots.
-Replace apiKey, messagingSenderId, and appId with values from Firebase Console > Project settings > General > Your apps (register a Web app if none exists). */
-const firebaseConfig={apiKey:"PASTE_API_KEY_HERE",
-authDomain:"badminton-project-a9aa8.firebaseapp.com",
-databaseURL:"https://badminton-project-a9aa8-default-rtdb.firebaseio.com",
-projectId:"badminton-project-a9aa8",
-storageBucket:"badminton-project-a9aa8.firebasestorage.app",
-messagingSenderId:"PASTE_MESSAGING_SENDER_ID_HERE",
-appId:"PASTE_APP_ID_HERE"};
-const $=id=>document.getElementById(id);let app,auth,db,user=null,activeCode="",stopSync=null,data=null;
-const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-function status(t,ok=false){$("status").textContent=t;$("dot").classList.toggle("ok",ok)}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function err(t){$("createError").textContent=t;$("createError").classList.remove("hidden")}
-function readyConfig(){return !!firebaseConfig.apiKey && !!firebaseConfig.projectId && !!firebaseConfig.databaseURL && firebaseConfig.apiKey!=="PASTE_API_KEY_HERE"}
-function startFirebase(){if(!readyConfig()){status("Firebase setup required");$("message").textContent="Replace the Firebase config placeholders in this HTML before deployment. See the setup instructions.";return}try{app=initializeApp(firebaseConfig);auth=getAuth(app);db=getDatabase(app);status("Connecting…");signInAnonymously(auth).catch(e=>{$("message").textContent="Anonymous sign-in failed: "+e.message});onAuthStateChanged(auth,u=>{user=u;if(u){status("Online",true);$("message").textContent="Connected. Create a tournament or join with a code."}})}catch(e){status("Setup error");$("message").textContent=e.message}}
-function makeFields(){let n=Number($("count").value);if(!Number.isInteger(n)||n<4||n>64){err("Enter a whole number from 4 to 64.");return} $("createError").classList.add("hidden");$("playerFields").innerHTML="";for(let i=1;i<=n;i++){let x=document.createElement("input");x.type="text";x.maxLength=50;x.id="player"+i;x.placeholder="Player "+i;x.setAttribute("aria-label","Player "+i);$("playerFields").appendChild(x)}$("oddNote").classList.toggle("hidden",n%2===0)}
-function code(){let s="";for(let i=0;i<6;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s}
-function buildData(){let n=Number($("count").value);if(!Number.isInteger(n)||n<4||n>64){err("Enter a whole number from 4 to 64.");return null}let players=[];for(let i=1;i<=n;i++)players.push($("player"+i)?.value.trim()||"Player "+i);if(new Set(players.map(x=>x.toLowerCase())).size!==players.length){err("Player names must be unique.");return null}let teams=[];for(let i=0;i+1<n;i+=2)teams.push({id:i/2,name:"Team "+(i/2+1),players:[players[i],players[i+1]]});return{name:$("tname").value.trim()||"Badminton Tournament",createdAt:Date.now(),createdBy:user.uid,players,teams,reserves:n%2?[players[n-1]]:[],matches:[],final:null,hasFixtures:false,updatedAt:Date.now()}}
-async function create(){if(!db||!user){err("Firebase is not connected. Complete setup and check your internet connection.");return}let d=buildData();if(!d)return;$("createBtn").disabled=true;try{let c,exists=true;for(let i=0;i<8&&exists;i++){c=code();exists=(await get(ref(db,"tournaments/"+c))).exists()}if(exists)throw Error("Could not create a unique code; try again.");await set(ref(db,"tournaments/"+c),d);$("createPanel").classList.add("hidden");$("codeInput").value=c;await connect(c)}catch(e){err("Could not create: "+e.message)}finally{$("createBtn").disabled=false}}
-async function join(){if(!db||!user){$("message").textContent="Firebase is not connected. Complete the setup first.";return}let c=$("codeInput").value.trim().toUpperCase();if(!/^[A-HJ-NP-Z2-9]{6}$/.test(c)){$("message").textContent="Enter a valid 6-character code.";return}try{let s=await get(ref(db,"tournaments/"+c));if(!s.exists()){$("message").textContent="No tournament found with that code.";return}await connect(c)}catch(e){$("message").textContent="Could not join: "+e.message}}
-async function connect(c){if(stopSync)stopSync();activeCode=c;status("Loading…");stopSync=onValue(ref(db,"tournaments/"+c),s=>{if(!s.exists()){status("Tournament missing");return}data=s.val();status("Live sync connected",true);$("connectCard").classList.add("hidden");$("tournament").classList.remove("hidden");render()},e=>{status("Sync error");alert("Database read failed: "+e.message)})}
-async function save(patch){if(!data||!activeCode)throw Error("Not connected");await set(ref(db,"tournaments/"+activeCode),{...data,...patch,updatedAt:Date.now()})}
-function generate(){let n=data.teams.length;if(n<2)throw Error("At least two doubles teams are required.");let list=Array.from({length:n},(_,i)=>i);if(list.length%2)list.push(-1);let rounds=list.length-1,half=list.length/2,rot=list.slice(),matches=[],id=0;for(let r=0;r<rounds;r++){for(let i=0;i<half;i++){let a=rot[i],b=rot[rot.length-1-i];if(a<0||b<0)continue;if((r+i)%2===1)[a,b]=[b,a];matches.push({id:id++,round:r+1,a,b,sa:null,sb:null,played:false})}let first=rot[0],rest=rot.slice(1);rest.unshift(rest.pop());rot.splice(0,rot.length,first,...rest)}return matches}
-function stats(){return data.teams.map((t,i)=>{let p=0,w=0,l=0,pts=0,scored=0,against=0;(data.matches||[]).forEach(m=>{if(!m.played||(m.a!==i&&m.b!==i))return;p++;let a=Number(m.a===i?m.sa:m.sb),b=Number(m.a===i?m.sb:m.sa);scored+=a;against+=b;if(a>b){w++;pts+=2}else l++});return{i,p,w,l,pts,scored,against,diff:scored-against}}).sort((a,b)=>b.pts-a.pts||b.w-a.w||b.diff-a.diff||b.scored-a.scored||a.i-b.i)}
-function complete(){return !!data.matches?.length&&data.matches.every(m=>m.played)}
-function render(){ $("activeName").textContent=data.name||"Badminton Tournament";$("activeCode").textContent=activeCode;$("summary").textContent=`${data.players.length} participants · ${data.teams.length} doubles teams · ${data.matches?.length||0} matches`;
-$("teamsList").innerHTML=data.teams.map((t,i)=>`<div class="team"><div><div class="teamname">${esc(t.name)}</div><div class="muted">${t.players.map(esc).join(" + ")}</div></div><span class="pill">Fixed</span></div>`).join("");$("reserves").innerHTML=data.reserves?.length?`<div class="notice"><b>Reserve/unpaired:</b> ${data.reserves.map(esc).join(", ")}. Not included in doubles standings.</div>`:"";$("fixturesBtn").textContent=data.hasFixtures?"Regenerate fixtures":"Generate round-robin fixtures";renderFixtures();renderStandings();renderFinal()}
-function renderFixtures(){let box=$("fixturesList");if(!data.hasFixtures||!data.matches?.length){box.innerHTML='<div class="notice">Generate fixtures from the Teams tab.</div>';return}box.innerHTML="";for(let r=1;r<=(data.teams.length%2===0?data.teams.length-1:data.teams.length);r++){let ms=data.matches.filter(m=>m.round===r);if(!ms.length)continue;let section=document.createElement("div");section.className="round";section.innerHTML=`<h3>Round ${r} <span class="pill">${ms.filter(m=>m.played).length}/${ms.length} completed</span></h3>`;ms.forEach(m=>{let a=data.teams[m.a],b=data.teams[m.b],d=document.createElement("div");d.className="match";d.innerHTML=`<div class="matchhead"><div class="side">${esc(a.name)}<br><span class="muted">${a.players.map(esc).join(" + ")}</span></div><div class="versus">VS</div><div class="side">${esc(b.name)}<br><span class="muted">${b.players.map(esc).join(" + ")}</span></div></div><div class="scoreline"><div class="muted right">Score</div><input class="sa" type="number" min="0" max="999" inputmode="numeric" placeholder="0" value="${m.played?m.sa:""}"><div>-</div><input class="sb" type="number" min="0" max="999" inputmode="numeric" placeholder="0" value="${m.played?m.sb:""}"><div></div></div><div class="matchfoot"><span class="${m.played?"saved":""}">${m.played?"✓ Saved result":"Not played"}</span><button>${m.played?"Update score":"Save result"}</button></div>`;d.querySelector("button").addEventListener("click",async()=>{let av=d.querySelector(".sa").value,bv=d.querySelector(".sb").value;if(av===""||bv===""||!Number.isInteger(Number(av))||!Number.isInteger(Number(bv))||+av<0||+bv<0||+av===+bv){alert("Enter two non-negative integer scores that are different.");return}try{await save({matches:data.matches.map(x=>x.id===m.id?{...x,sa:+av,sb:+bv,played:true}:x),final:null})}catch(e){alert("Could not save result: "+e.message)}});section.appendChild(d)});box.appendChild(section)}}
-function renderStandings(){if(!data.hasFixtures){$("standings").innerHTML='<div class="notice">Generate fixtures first.</div>';return}let s=stats();$("standings").innerHTML=`<div class="tablewrap"><table><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th>Diff</th></tr></thead><tbody>${s.map((x,k)=>`<tr><td><b>${k+1}</b></td><td>${esc(data.teams[x.i].name)}<br><span class="muted">${data.teams[x.i].players.map(esc).join(" + ")}</span></td><td>${x.p}</td><td>${x.w}</td><td>${x.l}</td><td><b>${x.pts}</b></td><td>${x.diff>0?"+":""}${x.diff}</td></tr>`).join("")}</tbody></table></div>`}
-function finalForm(f){$("finalArea").innerHTML=`<div class="notice">Qualified: <b>${esc(data.teams[f.a].name)}</b> and <b>${esc(data.teams[f.b].name)}</b>.</div><div class="match"><div class="matchhead"><div class="side">${esc(data.teams[f.a].name)}<br><span class="muted">${data.teams[f.a].players.map(esc).join(" + ")}</span></div><div class="versus">VS</div><div class="side">${esc(data.teams[f.b].name)}<br><span class="muted">${data.teams[f.b].players.map(esc).join(" + ")}</span></div></div><div class="scoreline"><div class="muted right">Score</div><input id="fa" type="number" min="0" max="999" placeholder="0" value="${f.played?f.sa:""}"><div>-</div><input id="fb" type="number" min="0" max="999" placeholder="0" value="${f.played?f.sb:""}"><div></div></div><button id="saveFinal" style="width:100%;margin-top:11px">${f.played?"Update final score":"Save final result"}</button></div>`;$("saveFinal").addEventListener("click",async()=>{let a=$("fa").value,b=$("fb").value;if(a===""||b===""||!Number.isInteger(+a)||!Number.isInteger(+b)||+a<0||+b<0||+a===+b){alert("Enter two non-negative integer scores that are different.");return}try{await save({final:{...f,sa:+a,sb:+b,played:true}})}catch(e){alert("Could not save final: "+e.message)}})}
-function renderFinal(){let box=$("finalArea");if(!data.hasFixtures){box.innerHTML='<div class="notice">Generate fixtures first.</div>';return}if(!complete()){let n=data.matches.filter(m=>!m.played).length;box.innerHTML=`<div class="notice">${n} round-robin match${n===1?"":"es"} remain. The final unlocks when every match has a saved result.</div>`;return}let s=stats(),f=data.final||{a:s[0].i,b:s[1].i,played:false};if(f.played){let winner=+f.sa>+f.sb?f.a:f.b;box.innerHTML=`<div class="finalbox"><div style="font-size:40px">🏆</div><div class="tinycap">Tournament champions</div><div class="champion">${data.teams[winner].players.map(esc).join(" + ")}</div><div>${f.sa} – ${f.sb}</div><div class="muted">Final</div><button id="editFinal" class="secondary" style="margin-top:12px">Edit final score</button></div>`;$("editFinal").addEventListener("click",()=>finalForm(f))}else finalForm(f)}
-function tab(name){document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("hidden",p.id!=="tab-"+name))}
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>tab(b.dataset.tab)));
-$("showCreate").addEventListener("click",()=>{$("createPanel").classList.toggle("hidden");makeFields()});$("buildFields").addEventListener("click",makeFields);$("count").addEventListener("change",makeFields);$("createBtn").addEventListener("click",create);$("joinBtn").addEventListener("click",join);
-$("codeInput").addEventListener("input",()=>{$("codeInput").value=$("codeInput").value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,"").slice(0,6)});
-$("fixturesBtn").addEventListener("click",async()=>{if(!confirm("Generate a new schedule? All current scores and the final will be cleared."))return;try{await save({matches:generate(),final:null,hasFixtures:true});tab("fixtures")}catch(e){alert(e.message)}});
-$("shareBtn").addEventListener("click",async()=>{let t=`Join my badminton tournament!\nTournament: ${data.name}\nCode: ${activeCode}\nWebsite: ${location.href}`;try{await navigator.clipboard.writeText(t);$("shareBtn").textContent="Copied!"}catch{alert(t)}});
-$("leaveBtn").addEventListener("click",()=>{if(stopSync)stopSync();stopSync=null;data=null;activeCode="";$("tournament").classList.add("hidden");$("connectCard").classList.remove("hidden");$("codeInput").value=""});
-$("exportBtn").addEventListener("click",()=>{let rows=[["Rank","Team","Players","Played","Wins","Losses","Match points","Scored","Against","Difference"]];stats().forEach((x,i)=>rows.push([i+1,data.teams[x.i].name,data.teams[x.i].players.join(" + "),x.p,x.w,x.l,x.pts,x.scored,x.against,x.diff]));let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n"),url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="badminton-standings.csv";a.click();URL.revokeObjectURL(url)});
-makeFields();if(readyConfig())startFirebase();else{status("Firebase setup required");$("message").textContent="Replace the Firebase config placeholders in this HTML file before deploying. See the instructions provided with the file."}
-</script></body></html>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#14251d">
+    <title>Rally — Badminton Tournament Manager</title>
+    <style>
+        :root {
+            --ink: #14251d;
+            --muted: #627067;
+            --line: #dce5df;
+            --paper: #f3f7f3;
+            --accent: #c9f36b;
+            --green: #1b7146
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif
+        }
+
+        .app {
+            max-width: 820px;
+            margin: auto;
+            padding: 12px 10px 36px
+        }
+
+        .hero {
+            background: var(--ink);
+            color: white;
+            border-radius: 20px;
+            padding: 21px;
+            margin-bottom: 12px
+        }
+
+        .eyebrow,
+        .tinycap {
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            font-weight: 800
+        }
+
+        .eyebrow {
+            color: var(--accent)
+        }
+
+        h1 {
+            font-size: 29px;
+            margin: 6px 0
+        }
+
+        h2 {
+            font-size: 19px;
+            margin: 0 0 5px
+        }
+
+        .hero p,
+        .sub,
+        .hint {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5
+        }
+
+        .hero p {
+            color: #d3ded6;
+            margin: 0
+        }
+
+        .status {
+            font-size: 12px;
+            margin-top: 14px;
+            display: flex;
+            gap: 7px;
+            align-items: center
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e8bb46
+        }
+
+        .dot.ok {
+            background: #8fe2a8
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 17px;
+            padding: 15px;
+            margin: 12px 0
+        }
+
+        .sub {
+            margin: 3px 0 13px
+        }
+
+        .label {
+            font-size: 13px;
+            font-weight: 800;
+            display: block;
+            margin: 12px 0 6px
+        }
+
+        input,
+        button {
+            font: inherit
+        }
+
+        input[type=text],
+        input[type=number] {
+            width: 100%;
+            min-width: 0;
+            min-height: 45px;
+            border: 1px solid #cbd7ce;
+            border-radius: 10px;
+            background: white;
+            padding: 9px 11px;
+            font-size: 16px;
+            color: var(--ink)
+        }
+
+        input[type=number] {
+            text-align: center
+        }
+
+        button {
+            border: 0;
+            border-radius: 11px;
+            min-height: 44px;
+            padding: 10px 13px;
+            background: var(--ink);
+            color: white;
+            font-weight: 750;
+            cursor: pointer
+        }
+
+        button:disabled {
+            opacity: .5
+        }
+
+        .secondary {
+            background: #e8eee8;
+            color: var(--ink)
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 11px
+        }
+
+        .actions>* {
+            flex: 1;
+            min-width: 120px
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .row>* {
+            min-width: 0
+        }
+
+        .players {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .notice {
+            padding: 11px;
+            border-radius: 11px;
+            background: #f1f7e4;
+            border: 1px solid #dcebbd;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 10px 0
+        }
+
+        .error {
+            padding: 10px;
+            border-radius: 10px;
+            background: #fff0f0;
+            color: #8d2929;
+            font-size: 13px;
+            margin-top: 10px
+        }
+
+        .team {
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 10px
+        }
+
+        .team:last-child {
+            border: 0
+        }
+
+        .teamname {
+            font-weight: 800
+        }
+
+        .muted {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px
+        }
+
+        .pill {
+            display: inline-block;
+            border-radius: 999px;
+            background: #edf2ed;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 800
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 8px
+        }
+
+        .tabs button {
+            white-space: nowrap;
+            min-height: 38px;
+            font-size: 12px;
+            padding: 7px 11px
+        }
+
+        .tabs .active {
+            background: var(--accent);
+            color: var(--ink)
+        }
+
+        .round {
+            margin-top: 17px
+        }
+
+        .round h3 {
+            font-size: 14px;
+            margin: 0 0 8px
+        }
+
+        .match {
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            padding: 11px;
+            margin: 8px 0
+        }
+
+        .matchhead {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 25px minmax(0, 1fr);
+            gap: 6px;
+            align-items: center
+        }
+
+        .side {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            overflow-wrap: anywhere
+        }
+
+        .versus {
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted)
+        }
+
+        .scoreline {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 54px 14px 54px minmax(0, 1fr);
+            gap: 4px;
+            align-items: center;
+            margin-top: 10px
+        }
+
+        .scoreline input {
+            padding: 7px 2px
+        }
+
+        .right {
+            text-align: right
+        }
+
+        .matchfoot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 12px
+        }
+
+        .matchfoot button {
+            min-height: 37px;
+            font-size: 12px;
+            padding: 7px 10px
+        }
+
+        .saved {
+            color: var(--green);
+            font-weight: 800
+        }
+
+        .tablewrap {
+            overflow-x: auto
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+            white-space: nowrap
+        }
+
+        td,
+        th {
+            padding: 9px 6px;
+            border-bottom: 1px solid var(--line);
+            text-align: center
+        }
+
+        th {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase
+        }
+
+        td:nth-child(2),
+        th:nth-child(2) {
+            text-align: left
+        }
+
+        .finalbox {
+            text-align: center;
+            border: 2px solid var(--ink);
+            border-radius: 15px;
+            padding: 20px
+        }
+
+        .code {
+            font-size: 23px;
+            letter-spacing: .12em;
+            font-weight: 900
+        }
+
+        .champion {
+            font-size: 21px;
+            font-weight: 900;
+            margin: 8px 0
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted);
+            padding: 12px
+        }
+
+        @media(max-width:430px) {
+            .players {
+                grid-template-columns: 1fr
+            }
+
+            .hero {
+                padding: 17px
+            }
+
+            .hero h1 {
+                font-size: 26px
+            }
+
+            .card {
+                padding: 12px
+            }
+
+            .scoreline {
+                grid-template-columns: minmax(0, 1fr) 46px 12px 46px minmax(0, 1fr)
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="hero">
+            <div class="eyebrow">Rally · Tournament desk</div>
+            <h1>Badminton, organized.</h1>
+            <p>Fixed doubles · Round robin · Top two teams play the final</p>
+            <div class="status"><span class="dot" id="dot"></span><span id="status">Firebase setup required</span></div>
+        </header>
+        <section class="card" id="connectCard">
+            <h2>Connect to a tournament</h2>
+            <div class="sub">Create a tournament or join with its code. Everyone needs internet access and this same
+                website URL.</div>
+            <label class="label" for="codeInput">Tournament code</label><input id="codeInput" type="text" maxlength="6"
+                placeholder="e.g. A7K9Q2" autocapitalize="characters">
+            <div class="actions"><button id="joinBtn" class="secondary">Join tournament</button><button
+                    id="showCreate">Create new</button></div>
+            <div id="message" class="hint" style="margin-top:9px">Add your Firebase project configuration to this HTML
+                file before deploying.</div>
+            <div id="createPanel" class="hidden">
+                <div style="height:1px;background:var(--line);margin:14px 0"></div><label class="label">Tournament
+                    name</label><input id="tname" type="text" maxlength="70" value="Weekend Badminton Cup"><label
+                    class="label">Number of participants (4–64)</label>
+                <div class="row"><input id="count" type="number" min="4" max="64" value="10"><button id="buildFields"
+                        class="secondary">Set fields</button></div>
+                <div id="oddNote" class="notice hidden">Odd participant count: the last person is a reserve/unpaired
+                    player. They won't be included in the doubles round robin. For everyone to play, enter an even
+                    number.</div>
+                <div id="playerFields" class="players" style="margin-top:10px"></div>
+                <div class="actions"><button id="createBtn">Create & share tournament</button></div>
+                <div id="createError" class="error hidden"></div>
+            </div>
+        </section>
+        <main id="tournament" class="hidden">
+            <section class="card">
+                <div class="row" style="justify-content:space-between">
+                    <div style="min-width:0">
+                        <div class="tinycap" style="color:var(--muted)">Live tournament</div>
+                        <h2 id="activeName" style="margin-top:4px;overflow-wrap:anywhere"></h2>
+                        <div id="summary" class="sub" style="margin:3px 0 0"></div>
+                    </div><button id="shareBtn" class="secondary">Share code</button>
+                </div>
+                <div class="notice">Tournament code: <span id="activeCode" class="code"></span><br>Share this code and
+                    the website URL. Anyone with the code can edit scores.</div>
+                <div class="tabs"><button data-tab="teams" class="active">Teams</button><button
+                        data-tab="fixtures">Fixtures & scores</button><button
+                        data-tab="standings">Standings</button><button data-tab="final">Final</button></div>
+            </section>
+            <section class="card panel" id="tab-teams">
+                <h2>Teams</h2>
+                <div class="sub">Fixed partners for this tournament.</div>
+                <div id="teamsList"></div>
+                <div id="reserves"></div>
+                <div class="actions"><button id="fixturesBtn">Generate round-robin fixtures</button></div>
+                <div class="hint">Generating a new schedule clears all current scores and the final. Only do this if you
+                    intend to restart the schedule.</div>
+            </section>
+            <section class="card panel hidden" id="tab-fixtures">
+                <h2>Fixtures & scores</h2>
+                <div class="sub">Enter final rally-point scores. Save results to update the live standings on every
+                    connected phone.</div>
+                <div id="fixturesList"></div>
+            </section>
+            <section class="card panel hidden" id="tab-standings">
+                <h2>Live standings</h2>
+                <div class="sub">Ranking: match points (2 per win), wins, score difference, points scored, then team
+                    number.</div>
+                <div id="standings"></div>
+            </section>
+            <section class="card panel hidden" id="tab-final">
+                <h2>Final</h2>
+                <div class="sub">The final unlocks after all round-robin matches have saved results.</div>
+                <div id="finalArea"></div>
+            </section>
+            <section class="card">
+                <h2>Export or leave</h2>
+                <div class="actions"><button id="exportBtn" class="secondary">Export standings CSV</button><button
+                        id="leaveBtn" class="secondary">Leave tournament</button></div>
+                <div class="hint" style="margin-top:8px">You can edit a saved score and save again; standings
+                    recalculate automatically.</div>
+            </section>
+        </main>
+        <div class="footer">Rally Tournament Desk · Shared updates need an internet connection.</div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        /* Project ID and Realtime Database URL are prefilled from your screenshots.
+        Replace apiKey, messagingSenderId, and appId with values from Firebase Console > Project settings > General > Your apps (register a Web app if none exists). */
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvV1Ps1Jvp4tif7DFqZ3LvqdtyxOJeyrM",
+            authDomain: "badminton-project-a9aa8.firebaseapp.com",
+            databaseURL: "https://badminton-project-a9aa8-default-rtdb.firebaseio.com",
+            projectId: "badminton-project-a9aa8",
+            storageBucket: "badminton-project-a9aa8.firebasestorage.app",
+            messagingSenderId: "72035855273",
+            appId: "1:72035855273:web:db0bd31e700170b4bc72b8",
+            measurementId: "G-JLMK0F0D1S"
+        };
+        const $ = id => document.getElementById(id); let app, auth, db, user = null, activeCode = "", stopSync = null, data = null;
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        function status(t, ok = false) { $("status").textContent = t; $("dot").classList.toggle("ok", ok) }
+        function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])) }
+        function err(t) { $("createError").textContent = t; $("createError").classList.remove("hidden") }
+        function readyConfig() { return !!firebaseConfig.apiKey && !!firebaseConfig.projectId && !!firebaseConfig.databaseURL && firebaseConfig.apiKey !== "PASTE_API_KEY_HERE" }
+        function startFirebase() { if (!readyConfig()) { status("Firebase setup required"); $("message").textContent = "Replace the Firebase config placeholders in this HTML before deployment. See the setup instructions."; return } try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getDatabase(app); status("Connecting…"); signInAnonymously(auth).catch(e => { $("message").textContent = "Anonymous sign-in failed: " + e.message }); onAuthStateChanged(auth, u => { user = u; if (u) { status("Online", true); $("message").textContent = "Connected. Create a tournament or join with a code." } }) } catch (e) { status("Setup error"); $("message").textContent = e.message } }
+        function makeFields() { let n = Number($("count").value); if (!Number.isInteger(n) || n < 4 || n > 64) { err("Enter a whole number from 4 to 64."); return } $("createError").classList.add("hidden"); $("playerFields").innerHTML = ""; for (let i = 1; i <= n; i++) { let x = document.createElement("input"); x.type = "text"; x.maxLength = 50; x.id = "player" + i; x.placeholder = "Player " + i; x.setAttribute("aria-label", "Player " + i); $("playerFields").appendChild(x) } $("oddNote").classList.toggle("hidden", n % 2 === 0) }
+        function code() { let s = ""; for (let i = 0; i < 6; i++)s += chars[Math.floor(Math.random() * chars.length)]; return s }
+        function buildData() { let n = Number($("count").value); if (!Number.isInteger(n) || n < 4 || n > 64) { err("Enter a whole number from 4 to 64."); return null } let players = []; for (let i = 1; i <= n; i++)players.push($("player" + i)?.value.trim() || "Player " + i); if (new Set(players.map(x => x.toLowerCase())).size !== players.length) { err("Player names must be unique."); return null } let teams = []; for (let i = 0; i + 1 < n; i += 2)teams.push({ id: i / 2, name: "Team " + (i / 2 + 1), players: [players[i], players[i + 1]] }); return { name: $("tname").value.trim() || "Badminton Tournament", createdAt: Date.now(), createdBy: user.uid, players, teams, reserves: n % 2 ? [players[n - 1]] : [], matches: [], final: null, hasFixtures: false, updatedAt: Date.now() } }
+        async function create() { if (!db || !user) { err("Firebase is not connected. Complete setup and check your internet connection."); return } let d = buildData(); if (!d) return; $("createBtn").disabled = true; try { let c, exists = true; for (let i = 0; i < 8 && exists; i++) { c = code(); exists = (await get(ref(db, "tournaments/" + c))).exists() } if (exists) throw Error("Could not create a unique code; try again."); await set(ref(db, "tournaments/" + c), d); $("createPanel").classList.add("hidden"); $("codeInput").value = c; await connect(c) } catch (e) { err("Could not create: " + e.message) } finally { $("createBtn").disabled = false } }
+        async function join() { if (!db || !user) { $("message").textContent = "Firebase is not connected. Complete the setup first."; return } let c = $("codeInput").value.trim().toUpperCase(); if (!/^[A-HJ-NP-Z2-9]{6}$/.test(c)) { $("message").textContent = "Enter a valid 6-character code."; return } try { let s = await get(ref(db, "tournaments/" + c)); if (!s.exists()) { $("message").textContent = "No tournament found with that code."; return } await connect(c) } catch (e) { $("message").textContent = "Could not join: " + e.message } }
+        async function connect(c) { if (stopSync) stopSync(); activeCode = c; status("Loading…"); stopSync = onValue(ref(db, "tournaments/" + c), s => { if (!s.exists()) { status("Tournament missing"); return } data = s.val(); status("Live sync connected", true); $("connectCard").classList.add("hidden"); $("tournament").classList.remove("hidden"); render() }, e => { status("Sync error"); alert("Database read failed: " + e.message) }) }
+        async function save(patch) { if (!data || !activeCode) throw Error("Not connected"); await set(ref(db, "tournaments/" + activeCode), { ...data, ...patch, updatedAt: Date.now() }) }
+        function generate() { let n = data.teams.length; if (n < 2) throw Error("At least two doubles teams are required."); let list = Array.from({ length: n }, (_, i) => i); if (list.length % 2) list.push(-1); let rounds = list.length - 1, half = list.length / 2, rot = list.slice(), matches = [], id = 0; for (let r = 0; r < rounds; r++) { for (let i = 0; i < half; i++) { let a = rot[i], b = rot[rot.length - 1 - i]; if (a < 0 || b < 0) continue; if ((r + i) % 2 === 1) [a, b] = [b, a]; matches.push({ id: id++, round: r + 1, a, b, sa: null, sb: null, played: false }) } let first = rot[0], rest = rot.slice(1); rest.unshift(rest.pop()); rot.splice(0, rot.length, first, ...rest) } return matches }
+        function stats() { return data.teams.map((t, i) => { let p = 0, w = 0, l = 0, pts = 0, scored = 0, against = 0; (data.matches || []).forEach(m => { if (!m.played || (m.a !== i && m.b !== i)) return; p++; let a = Number(m.a === i ? m.sa : m.sb), b = Number(m.a === i ? m.sb : m.sa); scored += a; against += b; if (a > b) { w++; pts += 2 } else l++ }); return { i, p, w, l, pts, scored, against, diff: scored - against } }).sort((a, b) => b.pts - a.pts || b.w - a.w || b.diff - a.diff || b.scored - a.scored || a.i - b.i) }
+        function complete() { return !!data.matches?.length && data.matches.every(m => m.played) }
+        function render() {
+            $("activeName").textContent = data.name || "Badminton Tournament"; $("activeCode").textContent = activeCode; $("summary").textContent = `${data.players.length} participants · ${data.teams.length} doubles teams · ${data.matches?.length || 0} matches`;
+            $("teamsList").innerHTML = data.teams.map((t, i) => `<div class="team"><div><div class="teamname">${esc(t.name)}</div><div class="muted">${t.players.map(esc).join(" + ")}</div></div><span class="pill">Fixed</span></div>`).join(""); $("reserves").innerHTML = data.reserves?.length ? `<div class="notice"><b>Reserve/unpaired:</b> ${data.reserves.map(esc).join(", ")}. Not included in doubles standings.</div>` : ""; $("fixturesBtn").textContent = data.hasFixtures ? "Regenerate fixtures" : "Generate round-robin fixtures"; renderFixtures(); renderStandings(); renderFinal()
+        }
+        function renderFixtures() { let box = $("fixturesList"); if (!data.hasFixtures || !data.matches?.length) { box.innerHTML = '<div class="notice">Generate fixtures from the Teams tab.</div>'; return } box.innerHTML = ""; for (let r = 1; r <= (data.teams.length % 2 === 0 ? data.teams.length - 1 : data.teams.length); r++) { let ms = data.matches.filter(m => m.round === r); if (!ms.length) continue; let section = document.createElement("div"); section.className = "round"; section.innerHTML = `<h3>Round ${r} <span class="pill">${ms.filter(m => m.played).length}/${ms.length} completed</span></h3>`; ms.forEach(m => { let a = data.teams[m.a], b = data.teams[m.b], d = document.createElement("div"); d.className = "match"; d.innerHTML = `<div class="matchhead"><div class="side">${esc(a.name)}<br><span class="muted">${a.players.map(esc).join(" + ")}</span></div><div class="versus">VS</div><div class="side">${esc(b.name)}<br><span class="muted">${b.players.map(esc).join(" + ")}</span></div></div><div class="scoreline"><div class="muted right">Score</div><input class="sa" type="number" min="0" max="999" inputmode="numeric" placeholder="0" value="${m.played ? m.sa : ""}"><div>-</div><input class="sb" type="number" min="0" max="999" inputmode="numeric" placeholder="0" value="${m.played ? m.sb : ""}"><div></div></div><div class="matchfoot"><span class="${m.played ? "saved" : ""}">${m.played ? "✓ Saved result" : "Not played"}</span><button>${m.played ? "Update score" : "Save result"}</button></div>`; d.querySelector("button").addEventListener("click", async () => { let av = d.querySelector(".sa").value, bv = d.querySelector(".sb").value; if (av === "" || bv === "" || !Number.isInteger(Number(av)) || !Number.isInteger(Number(bv)) || +av < 0 || +bv < 0 || +av === +bv) { alert("Enter two non-negative integer scores that are different."); return } try { await save({ matches: data.matches.map(x => x.id === m.id ? { ...x, sa: +av, sb: +bv, played: true } : x), final: null }) } catch (e) { alert("Could not save result: " + e.message) } }); section.appendChild(d) }); box.appendChild(section) } }
+        function renderStandings() { if (!data.hasFixtures) { $("standings").innerHTML = '<div class="notice">Generate fixtures first.</div>'; return } let s = stats(); $("standings").innerHTML = `<div class="tablewrap"><table><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th>Diff</th></tr></thead><tbody>${s.map((x, k) => `<tr><td><b>${k + 1}</b></td><td>${esc(data.teams[x.i].name)}<br><span class="muted">${data.teams[x.i].players.map(esc).join(" + ")}</span></td><td>${x.p}</td><td>${x.w}</td><td>${x.l}</td><td><b>${x.pts}</b></td><td>${x.diff > 0 ? "+" : ""}${x.diff}</td></tr>`).join("")}</tbody></table></div>` }
+        function finalForm(f) { $("finalArea").innerHTML = `<div class="notice">Qualified: <b>${esc(data.teams[f.a].name)}</b> and <b>${esc(data.teams[f.b].name)}</b>.</div><div class="match"><div class="matchhead"><div class="side">${esc(data.teams[f.a].name)}<br><span class="muted">${data.teams[f.a].players.map(esc).join(" + ")}</span></div><div class="versus">VS</div><div class="side">${esc(data.teams[f.b].name)}<br><span class="muted">${data.teams[f.b].players.map(esc).join(" + ")}</span></div></div><div class="scoreline"><div class="muted right">Score</div><input id="fa" type="number" min="0" max="999" placeholder="0" value="${f.played ? f.sa : ""}"><div>-</div><input id="fb" type="number" min="0" max="999" placeholder="0" value="${f.played ? f.sb : ""}"><div></div></div><button id="saveFinal" style="width:100%;margin-top:11px">${f.played ? "Update final score" : "Save final result"}</button></div>`; $("saveFinal").addEventListener("click", async () => { let a = $("fa").value, b = $("fb").value; if (a === "" || b === "" || !Number.isInteger(+a) || !Number.isInteger(+b) || +a < 0 || +b < 0 || +a === +b) { alert("Enter two non-negative integer scores that are different."); return } try { await save({ final: { ...f, sa: +a, sb: +b, played: true } }) } catch (e) { alert("Could not save final: " + e.message) } }) }
+        function renderFinal() { let box = $("finalArea"); if (!data.hasFixtures) { box.innerHTML = '<div class="notice">Generate fixtures first.</div>'; return } if (!complete()) { let n = data.matches.filter(m => !m.played).length; box.innerHTML = `<div class="notice">${n} round-robin match${n === 1 ? "" : "es"} remain. The final unlocks when every match has a saved result.</div>`; return } let s = stats(), f = data.final || { a: s[0].i, b: s[1].i, played: false }; if (f.played) { let winner = +f.sa > +f.sb ? f.a : f.b; box.innerHTML = `<div class="finalbox"><div style="font-size:40px">🏆</div><div class="tinycap">Tournament champions</div><div class="champion">${data.teams[winner].players.map(esc).join(" + ")}</div><div>${f.sa} – ${f.sb}</div><div class="muted">Final</div><button id="editFinal" class="secondary" style="margin-top:12px">Edit final score</button></div>`; $("editFinal").addEventListener("click", () => finalForm(f)) } else finalForm(f) }
+        function tab(name) { document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b.dataset.tab === name)); document.querySelectorAll(".panel").forEach(p => p.classList.toggle("hidden", p.id !== "tab-" + name)) }
+        document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => tab(b.dataset.tab)));
+        $("showCreate").addEventListener("click", () => { $("createPanel").classList.toggle("hidden"); makeFields() }); $("buildFields").addEventListener("click", makeFields); $("count").addEventListener("change", makeFields); $("createBtn").addEventListener("click", create); $("joinBtn").addEventListener("click", join);
+        $("codeInput").addEventListener("input", () => { $("codeInput").value = $("codeInput").value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g, "").slice(0, 6) });
+        $("fixturesBtn").addEventListener("click", async () => { if (!confirm("Generate a new schedule? All current scores and the final will be cleared.")) return; try { await save({ matches: generate(), final: null, hasFixtures: true }); tab("fixtures") } catch (e) { alert(e.message) } });
+        $("shareBtn").addEventListener("click", async () => { let t = `Join my badminton tournament!\nTournament: ${data.name}\nCode: ${activeCode}\nWebsite: ${location.href}`; try { await navigator.clipboard.writeText(t); $("shareBtn").textContent = "Copied!" } catch { alert(t) } });
+        $("leaveBtn").addEventListener("click", () => { if (stopSync) stopSync(); stopSync = null; data = null; activeCode = ""; $("tournament").classList.add("hidden"); $("connectCard").classList.remove("hidden"); $("codeInput").value = "" });
+        $("exportBtn").addEventListener("click", () => { let rows = [["Rank", "Team", "Players", "Played", "Wins", "Losses", "Match points", "Scored", "Against", "Difference"]]; stats().forEach((x, i) => rows.push([i + 1, data.teams[x.i].name, data.teams[x.i].players.join(" + "), x.p, x.w, x.l, x.pts, x.scored, x.against, x.diff])); let csv = rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(",")).join("\r\n"), url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })), a = document.createElement("a"); a.href = url; a.download = "badminton-standings.csv"; a.click(); URL.revokeObjectURL(url) });
+        makeFields(); if (readyConfig()) startFirebase(); else { status("Firebase setup required"); $("message").textContent = "Replace the Firebase config placeholders in this HTML file before deploying. See the instructions provided with the file." }
+    </script>
+</body>
+
+</html>
